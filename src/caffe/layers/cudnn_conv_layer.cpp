@@ -147,7 +147,7 @@ void CuDNNConvolutionLayer<Dtype>::Reshape(
 	  // planning strategy and a rewrite of Caffe's GPU memory mangagement
 	  size_t workspace_limit_bytes = 8 * 1024 * 1024;
 
-	  bool isNotFindFwd = false;
+	  //bool isNotFindFwd = false;
 
 	  for (int i = 0; i < bottom.size(); i++) {
 		  cudnn::setTensor4dDesc<Dtype>(&bottom_descs_[i],
@@ -164,7 +164,7 @@ void CuDNNConvolutionLayer<Dtype>::Reshape(
 			  filter_desc_, pad_h, pad_w,
 			  stride_h, stride_w);
 
-		  const int algo = Caffe::GetcuDNNAlgorithm(type(), this->channels_, this->num_output_, this->num_,
+		  const int algo = Caffe::GetcuDNNAlgorithm(this->type(), this->channels_, this->num_output_, this->num_,
 			  width, height, kernel_w_, kernel_h_, pad_w, pad_h, stride_w, stride_h);
 		  if (algo >= 0)
 			  fwd_algo_[i] = (cudnnConvolutionFwdAlgo_t)algo;
@@ -188,7 +188,7 @@ void CuDNNConvolutionLayer<Dtype>::Reshape(
 				  filter_desc_, this->blobs_[0].get(), &conv_descs_[i], &top_descs_[i], &top[i], &algo, 1));
 
 			  fwd_algo_[i] = algo;
-			  Caffe::SetcuDNNAlgorithm((int)fwd_algo_[i], type(), this->channels_, this->num_output_, this->num_,
+			  Caffe::SetcuDNNAlgorithm((int)fwd_algo_[i], this->type(), this->channels_, this->num_output_, this->num_,
 				  width, height, kernel_w_, kernel_h_, pad_w, pad_h, stride_w, stride_h);
 		  }
 

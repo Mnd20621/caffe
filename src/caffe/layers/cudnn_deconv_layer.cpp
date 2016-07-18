@@ -212,7 +212,7 @@ void CuDNNDeconvolutionLayer<Dtype>::Reshape(
 			  workspace_bwd_filter_sizes_[i] = 0;
 		  }
 
-		  const int algo = Caffe::GetcuDNNAlgorithm(type(), this->channels_, this->num_output_, this->num_,
+		  const int algo = Caffe::GetcuDNNAlgorithm(this->type(), this->channels_, this->num_output_, this->num_,
 			  width, height, kernel_w_, kernel_h_, pad_w, pad_h, stride_w, stride_h);
 		  if (algo >= 0)
 			  bwd_data_algo_[i] = (cudnnConvolutionBwdDataAlgo_t)algo;
@@ -236,7 +236,7 @@ void CuDNNDeconvolutionLayer<Dtype>::Reshape(
 				  &conv_descs_[i], &top_descs_[i], &top[i], &algo, 1));
 
 			  bwd_data_algo_[i] = algo;
-			  Caffe::SetcuDNNAlgorithm((int)bwd_data_algo_[i], type(), this->channels_, this->num_output_, this->num_,
+			  Caffe::SetcuDNNAlgorithm((int)bwd_data_algo_[i], this->type(), this->channels_, this->num_output_, this->num_,
 				  width, height, kernel_w_, kernel_h_, pad_w, pad_h, stride_w, stride_h);
 		  }
 
