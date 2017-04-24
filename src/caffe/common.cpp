@@ -16,10 +16,12 @@ namespace caffe {
 
 // Make sure each thread can have different values.
 static boost::thread_specific_ptr<Caffe> thread_instance_;
+#ifndef CPU_ONLY
 static int(*GetcuDNNAlgorithmFunc_)(const char *layer_name, int num_input, int num_output, int batch_size,
 	int width, int height, int kernel_w, int kernel_h, int pad_w, int pad_h, int stride_w, int stride_h) = nullptr;
 static void(*SetcuDNNAlgorithmFunc_)(int algo, const char *layer_name, int num_input, int num_output, int batch_size,
 	int width, int height, int kernel_w, int kernel_h, int pad_w, int pad_h, int stride_w, int stride_h) = nullptr;
+#endif
 
 Caffe& Caffe::Get() {
   if (!thread_instance_.get()) {
@@ -75,11 +77,14 @@ Caffe::Caffe()
     : random_generator_(), mode_(Caffe::CPU),
       solver_count_(1), root_solver_(true) { }
 
+Caffe::Caffe(Brew m)
+    : cublas_handle_(NULL), curand_generator_(NULL), random_generator_(),
+      mode_(m), solver_count_(1), root_solver_(true) { }
+
 Caffe::~Caffe() { }
 
 void Caffe::set_mode(Brew mode) {
   Get(mode).mode_ = mode;
-  init_cu_handle();
 }
 
 void Caffe::set_random_seed(const unsigned int seed) {
