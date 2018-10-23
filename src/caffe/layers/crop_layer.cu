@@ -4,8 +4,23 @@
 
 namespace caffe {
 
-// Copy (one line per thread) from one array to another, with arbitrary
-// strides in the last two dimensions.
+
+__device__ static int compute_uncropped_index(
+    int index,
+    const int ndims,
+    const int* src_strides,
+    const int* dest_strides,
+    const int* offsets) {
+  int dest_index = index;
+  int src_index = 0;
+  for (int i = 0; i < ndims; ++i) {
+      int coord = dest_index / dest_strides[i];
+      dest_index -= coord * dest_strides[i];
+      src_index += src_strides[i] * (coord + offsets[i]);
+  }
+  return src_index;
+}
+
 template <typename Dtype>
 __global__ void copy_kernel(const int n, const int height, const int width,
     const int src_outer_stride, const int src_inner_stride,
