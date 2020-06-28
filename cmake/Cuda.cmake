@@ -80,7 +80,7 @@ function(caffe_select_nvcc_arch_flags out_variable)
 
   if(${CUDA_ARCH_NAME} STREQUAL "Manual")
     set(CUDA_ARCH_BIN ${Caffe_known_gpu_archs} CACHE STRING "Specify 'real' GPU architectures to build binaries for, BIN(PTX) format is supported")
-    set(CUDA_ARCH_PTX "37"                     CACHE STRING "Specify 'virtual' PTX architectures to build PTX intermediate code for")
+    set(CUDA_ARCH_PTX "75"                     CACHE STRING "Specify 'virtual' PTX architectures to build PTX intermediate code for")
     mark_as_advanced(CUDA_ARCH_BIN CUDA_ARCH_PTX)
   else()
     unset(CUDA_ARCH_BIN CACHE)
